@@ -1,18 +1,16 @@
 <template>
 	<div id="app" class="uk-padding-small">
 		<Header />
-		<!-- <Content /> -->
+		<router-view />
 	</div>
 </template>
 
 <script>
 import Header from './router/layout/Header';
-import Content from './router/layout/Content';
 
 export default {
 	components: {
 		Header,
-		// Content,
 	},
 	data() {
 		return {

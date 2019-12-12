@@ -1,18 +1,18 @@
 import Account from './pages/account';
 import Option from './pages/option';
 import About from './pages/about';
+import Settings from './pages/settings';
+import Post from './pages/post';
 
 export default [
 	{
-		icon: 'el-icon-setting',
-		name: 'Option',
+		name: 'Settings',
 		path: '/',
-		component: Option,
+		component: Settings,
 	},
 	{
-		icon: 'el-icon-bell',
-		name: 'Information',
-		path: '/about',
-		component: About,
+		name: 'Post',
+		path: '/post',
+		component: Post,
 	},
 ];

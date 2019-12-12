@@ -1,9 +1,13 @@
 <template>
 	<ul uk-tab>
-		<li class="uk-active"><a href="#">post</a></li>
-		<li><a href="#">setting</a></li>
 		<li>
-			<a href="#"><span uk-icon="question"></span></a>
+			<router-link to="/post">post</router-link>
+		</li>
+		<li class="uk-active">
+			<router-link to="/">setting</router-link>
+		</li>
+		<li>
+			<router-link to="/question"><span uk-icon="question"></span></router-link>
 		</li>
 	</ul>
 </template>
