@@ -24,7 +24,7 @@ const config = {
 	},
 	resolve: {
 		alias: {
-			'@': path.resolve(__dirname, '/src'),
+			'@': path.resolve(__dirname, './src'),
 		},
 		extensions: ['.js', '.vue', '.ts', '.css'],
 	},
@@ -36,6 +36,8 @@ const config = {
 				exclude: [/node_modules/],
 				options: {
 					configFile: 'tsconfig.json',
+					transpileOnly: true,
+					appendTsSuffixTo: [/\.vue$/],
 				},
 			},
 			{
