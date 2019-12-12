@@ -1,6 +1,69 @@
 <template>
-	<div id="option">
-		settings page
+	<div id="settings">
+		<div class="uk-margin">
+			<label class="uk-form-label" for="form-script-url">Script Current web app URL</label>
+			<div class="uk-form-controls">
+				<input
+					class="uk-input"
+					id="form-script-url"
+					type="text"
+					placeholder="https://script.google.com/macros/s/******/exec"
+					style="max-width:79%"
+				/>
+				<button class="uk-button uk-button-primary" style="max-width:20%">
+					SAVE
+				</button>
+			</div>
+		</div>
+		<hr />
+		<div class="uk-margin">
+			<label class="uk-form-label" for="form-spreadsheet-url">Spreadsheet URL</label>
+			<div class="uk-form-controls">
+				<input
+					class="uk-input"
+					id="form-spreadsheet-url"
+					type="text"
+					placeholder="https://docs.google.com/spreadsheets/d/******/edit"
+					style="max-width:79%"
+				/>
+				<button class="uk-button uk-button-default" style="max-width:20%">
+					Sync
+				</button>
+			</div>
+		</div>
+
+		<!-- <ul class="uk-list uk-list-divider uk-margin-small-top">
+			<li v-for="sheet in syncSheets">
+				<div style="float:left">
+					<span class="sub">{{ sheet.spreadsheetName }}</span>
+					<h6 class="uk-margin-remove">{{ sheet.sheetName }}</h6>
+				</div>
+				<button
+					v-if="!sheet.added"
+					class="uk-button uk-button-small uk-button-primary"
+					style="float:right"
+					@click="
+						addSheet(sheet);
+						sheet.disabled = true;
+					"
+					:disabled="sheet.disabled"
+				>
+					add
+				</button>
+				<button
+					v-if="sheet.added"
+					class="uk-button uk-button-small uk-button-primary"
+					style="float:right"
+					@click="
+						updateSheet(sheet);
+						sheet.disabled = true;
+					"
+					:disabled="sheet.disabled"
+				>
+					update
+				</button>
+			</li>
+		</ul>-->
 	</div>
 </template>
 

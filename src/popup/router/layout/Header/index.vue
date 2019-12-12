@@ -7,7 +7,7 @@
 			<router-link to="/">setting</router-link>
 		</li>
 		<li>
-			<router-link to="/question"><span uk-icon="question"></span></router-link>
+			<router-link to="/help"><span uk-icon="question"></span></router-link>
 		</li>
 	</ul>
 </template>

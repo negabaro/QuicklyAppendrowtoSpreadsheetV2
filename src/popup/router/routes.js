@@ -1,9 +1,6 @@
-import Account from './pages/account';
-import Option from './pages/option';
-import About from './pages/about';
 import Settings from './pages/settings';
 import Post from './pages/post';
-
+import Help from './pages/help';
 export default [
 	{
 		name: 'Settings',
@@ -14,5 +11,10 @@ export default [
 		name: 'Post',
 		path: '/post',
 		component: Post,
+	},
+	{
+		name: 'Help',
+		path: '/help',
+		component: Help,
 	},
 ];
