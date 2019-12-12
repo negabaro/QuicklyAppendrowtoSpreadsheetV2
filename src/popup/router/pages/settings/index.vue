@@ -26,8 +26,11 @@
 					placeholder="https://docs.google.com/spreadsheets/d/******/edit"
 					style="max-width:79%"
 				/>
-				<button class="uk-button uk-button-default" style="max-width:20%">
+				<button v-on:click="handleClick" class="uk-button uk-button-default" style="max-width:20%">
 					Sync
+				</button>
+				<button v-on:click="handleClickRevoke" class="uk-button uk-button-default" style="max-width:20%">
+					revoke
 				</button>
 			</div>
 		</div>
@@ -68,6 +71,7 @@
 </template>
 
 <script>
+import { getToken, revokeToken } from '@/utils/oauth';
 // import { BADGE_TYPE } from '@/utils';
 // import mixin from '../../mixin/mixin';
 export default {
@@ -115,6 +119,18 @@ export default {
 	},
 
 	methods: {
+		handleClick(e) {
+			console.log('clicked ', e);
+			console.log('chrome.identity', chrome.identity);
+			// chrome.identity.getAuthToken({ interactive: true }, function(token) {
+			//	console.log('token!!', token);
+			// });
+
+			console.log('getTokenww22 ', getToken());
+		},
+		handleClickRevoke() {
+			console.log('getTokenww22 ', revokeToken());
+		},
 		save(payload) {
 			console.log('payload', payload);
 			chrome.storage.sync.set(payload, result => {
@@ -142,9 +158,9 @@ export default {
 			}, 3000);
 		},
 		resetData() {},
-		handleClick() {
-			this.updateData();
-		},
+		// handleClick() {
+		//		this.updateData();
+		// },
 	},
 };
 </script>
