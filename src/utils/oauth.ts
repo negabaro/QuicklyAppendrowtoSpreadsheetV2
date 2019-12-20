@@ -1,13 +1,17 @@
 import { setStorage, removeStorage } from '@/utils/storage';
 
-export const getToken = () => {
-	chrome.identity.getAuthToken({ interactive: true }, function(token) {
-		console.log('token!!zz', token);
-		if (token) {
-			setStorage({ token: token });
-		}
+/*
+export const getToken = chrome.identity.getAuthToken({ interactive: true }, function(token) {
+	console.log('token!!zz', token);
+	if (token) {
+		setStorage({ token: token });
+	}
+}); */
+
+export const getToken = () =>
+	new Promise(resolve => {
+		chrome.identity.getAuthToken({ interactive: true }, resolve);
 	});
-};
 
 export const revokeToken = () => {
 	chrome.identity.getAuthToken({ interactive: false }, function(currentToken) {

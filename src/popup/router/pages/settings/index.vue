@@ -1,22 +1,6 @@
 <template>
 	<div id="settings">
 		<div class="uk-margin">
-			<label class="uk-form-label" for="form-script-url">Script Current web app URL</label>
-			<div class="uk-form-controls">
-				<input
-					class="uk-input"
-					id="form-script-url"
-					type="text"
-					placeholder="https://script.google.com/macros/s/******/exec"
-					style="max-width:79%"
-				/>
-				<button class="uk-button uk-button-primary" style="max-width:20%">
-					SAVE
-				</button>
-			</div>
-		</div>
-		<hr />
-		<div class="uk-margin">
 			<label class="uk-form-label" for="form-spreadsheet-url">Spreadsheet URL</label>
 			<div class="uk-form-controls">
 				<input
@@ -24,9 +8,19 @@
 					id="form-spreadsheet-url"
 					type="text"
 					placeholder="https://docs.google.com/spreadsheets/d/******/edit"
+					v-model="VMspreadsheetURL"
 					style="max-width:79%"
 				/>
-				<button v-on:click="handleClick" class="uk-button uk-button-default" style="max-width:20%">
+				<button disalbed v-on:click="updateData" class="uk-button uk-button-primary" style="max-width:20%">
+					Save
+				</button>
+			</div>
+		</div>
+		<hr />
+		<div class="uk-margin">
+			<label class="uk-form-label" for="form-spreadsheet-url">sync/revoke</label>
+			<div class="uk-form-controls">
+				<button disalbed v-on:click="handleClickSync" class="uk-button uk-button-primary" style="max-width:20%">
 					Sync
 				</button>
 				<button v-on:click="handleClickRevoke" class="uk-button uk-button-default" style="max-width:20%">
@@ -72,95 +66,38 @@
 
 <script>
 import { getToken, revokeToken } from '@/utils/oauth';
+import { getStorage, getSyncStorage, setSyncStorage } from '@/utils/storage';
 // import { BADGE_TYPE } from '@/utils';
 // import mixin from '../../mixin/mixin';
 export default {
 	props: ['isLogin'],
 	data() {
 		return {
+			VMspreadsheetURL: '',
 			num: 5,
-			options: [
-				{
-					value: '50',
-					label: '50',
-				},
-				{
-					value: '100',
-					label: '100',
-				},
-				{
-					value: '300',
-					label: '300',
-				},
-				{
-					value: '500',
-					label: '500',
-				},
-				{
-					value: '9999999999999',
-					label: '전체',
-				},
-			],
 			value: '',
 			serviceType: null,
 			saved: false,
 			reset: false,
 		};
 	},
-	created() {
-		chrome.storage.sync.get(null, result => {
-			this.serviceType = result.getCommentCnt;
-			console.log('created:', result);
-		});
-		/*
-    this.$root.$on('updated', () => {
-      chrome.storage.sync.get(null, result => this.init(result));
-    }); */
+	async created() {
+		const spreadhsheetUrl = await getSyncStorage('spreadsheetUrl');
+		this.VMspreadsheetURL = spreadhsheetUrl.spreadsheetUrl;
 	},
 
 	methods: {
-		handleClick(e) {
-			console.log('clicked ', e);
-			console.log('chrome.identity', chrome.identity);
-			// chrome.identity.getAuthToken({ interactive: true }, function(token) {
-			//	console.log('token!!', token);
-			// });
-
-			console.log('getTokenww22 ', getToken());
+		async handleClickSync(e) {
+			const res = await getToken();
+			const res1 = await setSyncStorage({ token: res });
 		},
 		handleClickRevoke() {
-			console.log('getTokenww22 ', revokeToken());
+			revokeToken();
 		},
-		save(payload) {
-			console.log('payload', payload);
-			chrome.storage.sync.set(payload, result => {
-				console.log('saved result :', result);
-			});
-
-			chrome.storage.local.set(payload, function() {
-				console.log('saved result22 :');
-			});
-
-			console.log('this.serviceType!!', this.serviceType);
-
-			// this.serviceType = this.value;
-		},
-
-		updateData() {
-			const payload = {
-				getCommentCnt: this.serviceType,
-			};
-			// this.save(payload, 'updated');
-			this.save(payload);
-			this.saved = true;
-			setTimeout(() => {
-				this.saved = false;
-			}, 3000);
+		async updateData() {
+			const res1 = await setSyncStorage({ spreadsheetUrl: this.VMspreadsheetURL });
 		},
 		resetData() {},
-		// handleClick() {
-		//		this.updateData();
-		// },
 	},
 };
 </script>
