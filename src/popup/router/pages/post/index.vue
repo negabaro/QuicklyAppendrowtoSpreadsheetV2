@@ -1,86 +1,113 @@
 <template>
-	<div id="option">
-		post page
+	<div id="post">
+		<div v-if="VMsheets.length">
+			<div class="uk-margin">
+				<div class="uk-form-controls">
+					<select class="uk-select uk-form-select" v-model="VMselectedSheet">
+						<option v-for="(sheet, key) in VMsheets" :key="key" v-bind:value="sheet.title">
+							{{ sheet.title }}
+						</option>
+					</select>
+				</div>
+			</div>
+			<hr />
+			<div class="uk-margin">
+				<label class="uk-form-label" for="form-spreadsheet-url">title</label>
+				<div class="uk-form-controls">
+					<input
+						class="uk-input"
+						id="form-title"
+						type="text"
+						placeholder="xxx"
+						v-model="VMtitle"
+						style="max-width:79%"
+					/>
+				</div>
+			</div>
+			<hr />
+			<div class="uk-margin">
+				<label class="uk-form-label" for="form-spreadsheet-url">url</label>
+				<div class="uk-form-controls">
+					<input
+						class="uk-input"
+						id="form-url"
+						type="text"
+						placeholder="https://xxx"
+						v-model="VMurl"
+						style="max-width:79%"
+					/>
+				</div>
+			</div>
+			<hr />
+			<div class="uk-margin">
+				<label class="uk-form-label" for="form-spreadsheet-url">memo</label>
+				<div class="uk-form-controls">
+					<input
+						class="uk-input"
+						id="form-memo"
+						type="text"
+						placeholder="memo"
+						v-model="VMmemo"
+						style="max-width:79%"
+					/>
+				</div>
+			</div>
+			<hr />
+			<div class="uk-margin">
+				<div class="uk-form-controls">
+					<button disalbed v-on:click="saveData" class="uk-button uk-button-primary" style="max-width:20%">
+						save
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
-// import { BADGE_TYPE } from '@/utils';
-// import mixin from '../../mixin/mixin';
+import { getSyncStorage, setSyncStorage } from '@/utils/storage';
+import Repository from '@/repository/Repository';
 export default {
 	props: ['isLogin'],
 	data() {
 		return {
-			num: 5,
-			options: [
-				{
-					value: '50',
-					label: '50',
-				},
-				{
-					value: '100',
-					label: '100',
-				},
-				{
-					value: '300',
-					label: '300',
-				},
-				{
-					value: '500',
-					label: '500',
-				},
-				{
-					value: '9999999999999',
-					label: '전체',
-				},
-			],
-			value: '',
-			serviceType: null,
-			saved: false,
-			reset: false,
+			VMselectedSheet: {},
+			VMsheets: [],
+			VMtitle: '',
+			VMurl: '',
+			VMmemo: '',
 		};
 	},
-	created() {
-		chrome.storage.sync.get(null, result => {
-			this.serviceType = result.getCommentCnt;
-			console.log('created:', result);
-		});
-		/*
-    this.$root.$on('updated', () => {
-      chrome.storage.sync.get(null, result => this.init(result));
-    }); */
+	async created() {
+		const sheets = await getSyncStorage('sheets');
+		this.VMsheets = sheets.sheets;
 	},
 
 	methods: {
-		save(payload) {
-			console.log('payload', payload);
-			chrome.storage.sync.set(payload, result => {
-				console.log('saved result :', result);
-			});
-
-			chrome.storage.local.set(payload, function() {
-				console.log('saved result22 :');
-			});
-
-			console.log('this.serviceType!!', this.serviceType);
-
-			// this.serviceType = this.value;
-		},
-
-		updateData() {
-			const payload = {
-				getCommentCnt: this.serviceType,
+		async saveData() {
+			const res2 = await Repository.get(`values/${this.VMselectedSheet}!D1:D10000`);
+			const latestRow = res2.values.length;
+			const data = {
+				data: [],
+				valueInputOption: 'USER_ENTERED',
 			};
-			// this.save(payload, 'updated');
-			this.save(payload);
-			this.saved = true;
-			setTimeout(() => {
-				this.saved = false;
-			}, 3000);
-		},
-		resetData() {},
-		handleClick() {
-			this.updateData();
+			if (!this.VMmemo) {
+				this.VMmemo = 'default';
+			}
+			const config = {
+				data: [
+					{
+						range: `${this.VMselectedSheet}!B${latestRow + 1}:D${latestRow + 1}`,
+						majorDimension: 'ROWS',
+						values: [[this.VMtitle, this.VMurl, this.VMmemo]],
+					},
+				],
+				valueInputOption: 'USER_ENTERED',
+			};
+
+			const res3 = await Repository.post('values:batchUpdate', config);
+			console.log('re3!!!:', res3);
+			// const res1 = await setSyncStorage({ url: this.VMspreadsheetURL });
 		},
 	},
 };

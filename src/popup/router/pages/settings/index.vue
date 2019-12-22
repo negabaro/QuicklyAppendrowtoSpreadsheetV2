@@ -28,58 +28,20 @@
 				</button>
 			</div>
 		</div>
-
-		<!-- <ul class="uk-list uk-list-divider uk-margin-small-top">
-			<li v-for="sheet in syncSheets">
-				<div style="float:left">
-					<span class="sub">{{ sheet.spreadsheetName }}</span>
-					<h6 class="uk-margin-remove">{{ sheet.sheetName }}</h6>
-				</div>
-				<button
-					v-if="!sheet.added"
-					class="uk-button uk-button-small uk-button-primary"
-					style="float:right"
-					@click="
-						addSheet(sheet);
-						sheet.disabled = true;
-					"
-					:disabled="sheet.disabled"
-				>
-					add
-				</button>
-				<button
-					v-if="sheet.added"
-					class="uk-button uk-button-small uk-button-primary"
-					style="float:right"
-					@click="
-						updateSheet(sheet);
-						sheet.disabled = true;
-					"
-					:disabled="sheet.disabled"
-				>
-					update
-				</button>
-			</li>
-		</ul>-->
 	</div>
 </template>
 
 <script>
 import { getToken, revokeToken } from '@/utils/oauth';
+import { filterSheets } from '@/utils/index';
 import { getStorage, getSyncStorage, setSyncStorage } from '@/utils/storage';
 import Repository from '@/repository/Repository';
-// import { BADGE_TYPE } from '@/utils';
-// import mixin from '../../mixin/mixin';
 export default {
 	props: ['isLogin'],
 	data() {
 		return {
 			VMspreadsheetURL: '',
-			num: 5,
-			value: '',
-			serviceType: null,
-			saved: false,
-			reset: false,
+			syncSheets: [],
 		};
 	},
 	async created() {
@@ -92,6 +54,8 @@ export default {
 			const res = await getToken();
 			const res1 = await setSyncStorage({ token: res });
 			const res2 = await Repository.get('');
+			const res3 = filterSheets(res2.sheets);
+			const res4 = await setSyncStorage({ sheets: res3 });
 		},
 		handleClickRevoke() {
 			revokeToken();
