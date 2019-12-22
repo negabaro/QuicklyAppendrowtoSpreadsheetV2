@@ -67,6 +67,7 @@
 <script>
 import { getToken, revokeToken } from '@/utils/oauth';
 import { getStorage, getSyncStorage, setSyncStorage } from '@/utils/storage';
+import Repository from '@/repository/Repository';
 // import { BADGE_TYPE } from '@/utils';
 // import mixin from '../../mixin/mixin';
 export default {
@@ -90,6 +91,7 @@ export default {
 		async handleClickSync(e) {
 			const res = await getToken();
 			const res1 = await setSyncStorage({ token: res });
+			const res2 = await Repository.get('');
 		},
 		handleClickRevoke() {
 			revokeToken();

@@ -1,21 +1,39 @@
 import axios, { AxiosResponse } from 'axios';
+import { getSyncStorage } from '@/utils/storage';
+import { getSpreadsheetId } from '@/utils/index';
+const rootPath = `https://sheets.googleapis.com/v4/spreadsheets`;
 
-const rootPath = `https://www.googleapis.com/youtube/v3`;
 export const fetchGet = async <T>(path: string): Promise<T> => {
-  const res = await fetch(`${rootPath}/${path}`);
-  const data = await res.json();
-  return data;
+	const res = await fetch(`${rootPath}/${path}`);
+	const data = await res.json();
+	return data;
 };
 
 export default {
-  get(path: string, config = {}) {
-    // console.log(`url: ${apiRootPath}/${path}`);
-    return axios({
-      method: 'GET',
-      url: `${rootPath}/${path}`,
-      ...config,
-    })
-      .then((res: AxiosResponse) => res.data)
-      .catch(err => console.error('api request failed', err));
-  },
+	async get(path: string, config = {}) {
+		const accessToken: any = await getSyncStorage('token');
+		const spreadsheetUrl: any = await getSyncStorage('spreadsheetUrl');
+		const spreadsheetId: string = getSpreadsheetId(spreadsheetUrl.spreadsheetUrl);
+
+		return axios({
+			method: 'GET',
+			url: `${rootPath}/${spreadsheetId}`,
+			headers: {
+				Authorization: 'Bearer ' + accessToken.token,
+				'Content-Type': 'application/json',
+			},
+			...config,
+		})
+			.then((res: AxiosResponse) => res.data)
+			.catch(err => console.error('api request failed', err));
+	},
+	post(path: string, config = {}) {
+		return axios({
+			method: 'POST',
+			url: `${rootPath}/${path}`,
+			...config,
+		})
+			.then((res: AxiosResponse) => res.data)
+			.catch(err => console.error('api request failed', err));
+	},
 };
