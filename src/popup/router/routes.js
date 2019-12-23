@@ -4,7 +4,7 @@ import Help from './pages/help';
 export default [
 	{
 		name: 'Settings',
-		path: '/',
+		path: '/settings',
 		component: Settings,
 	},
 	{
@@ -16,5 +16,10 @@ export default [
 		name: 'Help',
 		path: '/help',
 		component: Help,
+	},
+	{
+		name: 'Post',
+		path: '/',
+		component: Post,
 	},
 ];

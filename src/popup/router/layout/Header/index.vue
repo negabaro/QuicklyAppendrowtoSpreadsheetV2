@@ -1,10 +1,10 @@
 <template>
 	<ul uk-tab>
-		<li>
+		<li class="uk-active">
 			<router-link to="/post">post</router-link>
 		</li>
-		<li class="uk-active">
-			<router-link to="/">setting</router-link>
+		<li>
+			<router-link to="/settings">settings</router-link>
 		</li>
 		<li>
 			<router-link to="/help"><span uk-icon="question"></span></router-link>
