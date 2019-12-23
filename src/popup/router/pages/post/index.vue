@@ -3,7 +3,7 @@
 		<div v-if="VMsheets.length">
 			<div class="uk-margin">
 				<div class="uk-form-controls">
-					<select class="uk-select uk-form-select" v-model="VMselectedSheet">
+					<select class="uk-select uk-form-select" @change="onChange($event)" v-model="VMselectedSheet">
 						<option v-for="(sheet, key) in VMsheets" :key="key" v-bind:value="sheet.title">
 							{{ sheet.title }}
 						</option>
@@ -72,7 +72,7 @@ export default {
 	props: ['isLogin'],
 	data() {
 		return {
-			VMselectedSheet: {},
+			VMselectedSheet: '',
 			VMsheets: [],
 			VMtitle: '',
 			VMurl: '',
@@ -82,9 +82,15 @@ export default {
 	async created() {
 		const sheets = await getSyncStorage('sheets');
 		this.VMsheets = sheets.sheets;
+		const selectedSheets = await getSyncStorage('selectedSheets');
+		this.VMselectedSheet = selectedSheets.selectedSheets;
 	},
 
 	methods: {
+		async onChange(event) {
+			// console.log(event.target.value);
+			const res1 = await setSyncStorage({ selectedSheets: event.target.value });
+		},
 		async saveData() {
 			const res2 = await Repository.get(`values/${this.VMselectedSheet}!D1:D10000`);
 			const latestRow = res2.values.length;
