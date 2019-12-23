@@ -23,6 +23,7 @@
   "dependencies": {
     "typescript": "^3.6.4",
     "uikit": "^3.2.4",
+    "@types/uikit": "^2.27.7",
     "vue": "^2.6.10",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
