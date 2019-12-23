@@ -33,7 +33,7 @@
 
 <script>
 import { getToken, revokeToken } from '@/utils/oauth';
-import { filterSheets } from '@/utils/index';
+import { filterSheets, doneNotification } from '@/utils/index';
 import { getStorage, getSyncStorage, setSyncStorage } from '@/utils/storage';
 import Repository from '@/repository/Repository';
 export default {
@@ -56,12 +56,16 @@ export default {
 			const res2 = await Repository.get('');
 			const res3 = filterSheets(res2.sheets);
 			const res4 = await setSyncStorage({ sheets: res3 });
+			console.log('4res4', res4);
+			doneNotification('done');
 		},
 		handleClickRevoke() {
 			revokeToken();
 		},
 		async updateData() {
 			const res1 = await setSyncStorage({ spreadsheetUrl: this.VMspreadsheetURL });
+			// console.log('res1', res1);
+			doneNotification('');
 		},
 		resetData() {},
 	},

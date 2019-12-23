@@ -7,9 +7,9 @@
     "noImplicitReturns": true,
     "strictNullChecks": true,
     "jsx": "react",
-    "lib": ["dom", "es2017"],
+    "lib": ["dom", "es2017", "es6"],
     "baseUrl": ".",
-    "types": ["@types/jest", "@types/chrome", "@types/jquery"],
+    "types": ["@types/jest", "@types/chrome", "@types/jquery", "@types/uikit"],
     "paths": {
       "@/*": ["src/*"]
     }

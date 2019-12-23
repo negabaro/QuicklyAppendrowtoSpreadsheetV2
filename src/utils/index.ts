@@ -1,3 +1,6 @@
+// import * as UIkit from 'uikit/dist/js/uikit-core.js';
+// declare module 'uikit/dist/js/uikit-core.js';
+
 export const getSpreadsheetId = (spreadsheetUrl: string): any => {
 	let spreadsheetId: string;
 	const r1 = RegExp('/docs.google.com\\/spreadsheets\\/d\\/(.+)\\/edit');
@@ -23,4 +26,14 @@ export const filterSheets = (addedSheets: any) => {
 		return y;
 	});
 	return z;
+};
+export const doneNotification = (obj: any) => {
+	if (obj) {
+		// eslint-disable-next-line no-undef
+		(UIkit as any).notification('🎉Done!', {
+			status: 'success',
+			timeout: 3000,
+			pos: 'bottom-left',
+		});
+	}
 };

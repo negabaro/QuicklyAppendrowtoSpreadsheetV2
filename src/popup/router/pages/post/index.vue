@@ -42,13 +42,13 @@
 			<div class="uk-margin">
 				<label class="uk-form-label" for="form-spreadsheet-url">memo</label>
 				<div class="uk-form-controls">
-					<input
-						class="uk-input"
+					<textarea
+						class="uk-textarea"
 						id="form-memo"
 						type="text"
 						placeholder="memo"
 						v-model="VMmemo"
-						style="max-width:79%"
+						style="max-width:100%;max-height:100%"
 					/>
 				</div>
 			</div>
@@ -67,6 +67,7 @@
 <script>
 import { getSyncStorage, setSyncStorage } from '@/utils/storage';
 import Repository from '@/repository/Repository';
+import { doneNotification } from '@/utils/index';
 export default {
 	props: ['isLogin'],
 	data() {
@@ -108,6 +109,7 @@ export default {
 			const res3 = await Repository.post('values:batchUpdate', config);
 			console.log('re3!!!:', res3);
 			// const res1 = await setSyncStorage({ url: this.VMspreadsheetURL });
+			doneNotification(res3);
 		},
 	},
 };
