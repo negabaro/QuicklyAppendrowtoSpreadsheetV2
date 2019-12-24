@@ -27,13 +27,11 @@ export const filterSheets = (addedSheets: any) => {
 	});
 	return z;
 };
-export const doneNotification = (obj: any) => {
-	if (obj) {
-		// eslint-disable-next-line no-undef
-		(UIkit as any).notification('🎉Done!', {
-			status: 'success',
-			timeout: 3000,
-			pos: 'bottom-left',
-		});
-	}
+export const doneNotification = (message: string = '🎉Done!', status: string = 'success') => {
+	// eslint-disable-next-line no-undef
+	(UIkit as any).notification(message, {
+		status: status,
+		timeout: 3000,
+		pos: 'bottom-left',
+	});
 };
