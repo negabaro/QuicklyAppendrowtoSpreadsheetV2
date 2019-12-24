@@ -3,11 +3,18 @@
 		<div v-if="VMsheets.length">
 			<div class="uk-margin">
 				<div class="uk-form-controls">
+					<v-select
+						@change="changedValue"
+						@selected="changedLabel"
+						v-model="VMselectedSheet"
+						:options="VMsheets.map(g => ({ label: g.title, value: g.title }))"
+					></v-select>
+					<!-- 
 					<select class="uk-select uk-form-select" @change="onChange($event)" v-model="VMselectedSheet">
 						<option v-for="(sheet, key) in VMsheets" :key="key" v-bind:value="sheet.title">
 							{{ sheet.title }}
 						</option>
-					</select>
+					</select>-->
 				</div>
 			</div>
 			<hr />
@@ -15,6 +22,7 @@
 				<label class="uk-form-label" for="form-spreadsheet-url">title</label>
 				<div class="uk-form-controls">
 					<input
+						@change="onChangeTitle($event)"
 						class="uk-input"
 						id="form-title"
 						type="text"
@@ -29,6 +37,7 @@
 				<label class="uk-form-label" for="form-spreadsheet-url">url</label>
 				<div class="uk-form-controls">
 					<input
+						@change="onChangeUrl($event)"
 						class="uk-input"
 						id="form-url"
 						type="text"
@@ -43,6 +52,7 @@
 				<label class="uk-form-label" for="form-spreadsheet-url">memo</label>
 				<div class="uk-form-controls">
 					<textarea
+						@change="onChangeMemo($event)"
 						class="uk-textarea"
 						id="form-memo"
 						type="text"
@@ -77,6 +87,8 @@ export default {
 			VMtitle: '',
 			VMurl: '',
 			VMmemo: '',
+			// groupsData: groups,
+			// selected: [],
 		};
 	},
 	async created() {
@@ -84,12 +96,47 @@ export default {
 		this.VMsheets = sheets.sheets;
 		const selectedSheets = await getSyncStorage('selectedSheets');
 		this.VMselectedSheet = selectedSheets.selectedSheets;
-	},
 
+		const title = await getSyncStorage('title');
+		this.VMtitle = title.title;
+
+		const url = await getSyncStorage('url');
+		this.VMurl = url.url;
+
+		const memo = await getSyncStorage('memo');
+		this.VMmemo = memo.memo;
+	},
+	computed: {
+		selectOptions() {
+			return this.groupsData.map(g => ({ label: g.group_name, value: g.id }));
+		},
+	},
 	methods: {
-		async onChange(event) {
-			// console.log(event.target.value);
+		async resetData() {
+			await setSyncStorage({ title: '' });
+			await setSyncStorage({ url: '' });
+			await setSyncStorage({ memo: '' });
+		},
+		changedValue: function(value) {
+			console.log('changedValue', value);
+			// receive the value selected (return an array if is multiple)
+		},
+		changedLabel: function(label) {
+			console.log('changedLabel', label);
+			// receive the label of the value selected (the label shown in the select, or an empty string)
+		},
+		async onChange(selectObj) {
+			console.log('selectObj', selectObj);
 			const res1 = await setSyncStorage({ selectedSheets: event.target.value });
+		},
+		async onChangeTitle(event) {
+			const res1 = await setSyncStorage({ title: event.target.value });
+		},
+		async onChangeUrl(event) {
+			const res1 = await setSyncStorage({ url: event.target.value });
+		},
+		async onChangeMemo(event) {
+			const res1 = await setSyncStorage({ memo: event.target.value });
 		},
 		async saveData() {
 			const res2 = await Repository.get(`values/${this.VMselectedSheet}!D1:D10000`);
@@ -115,7 +162,8 @@ export default {
 			const res3 = await Repository.post('values:batchUpdate', config);
 			console.log('re3!!!:', res3);
 			// const res1 = await setSyncStorage({ url: this.VMspreadsheetURL });
-			doneNotification(res3);
+
+			await this.resetData();
 		},
 	},
 };
