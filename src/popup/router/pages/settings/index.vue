@@ -57,7 +57,7 @@ export default {
 			const res3 = filterSheets(res2.sheets);
 			const res4 = await setSyncStorage({ sheets: res3 });
 			console.log('4res4', res4);
-			doneNotification('done');
+			doneNotification();
 		},
 		handleClickRevoke() {
 			revokeToken();
@@ -65,7 +65,7 @@ export default {
 		async updateData() {
 			const res1 = await setSyncStorage({ spreadsheetUrl: this.VMspreadsheetURL });
 			// console.log('res1', res1);
-			doneNotification('');
+			doneNotification();
 		},
 		resetData() {},
 	},

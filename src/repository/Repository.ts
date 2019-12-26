@@ -10,6 +10,8 @@ export const fetchGet = async <T>(path: string): Promise<T> => {
 	const data = await res.json();
 	return data;
 };
+var getRetry = true;
+var postRetry = true;
 
 export default {
 	async get(path: string, config = {}) {
@@ -35,9 +37,11 @@ export default {
 			.catch(err => {
 				console.error('api request failed', err);
 				doneNotification('GET失敗しました', 'danger');
-				if (this.status === 401) {
-					// retry = false;
+				if (this.status === 401 && getRetry) {
 					revokeToken();
+					getRetry = false;
+					console.log('401 path!', path);
+					this.get(path);
 				}
 				// throw new Error('api request failed');
 			});
@@ -67,9 +71,10 @@ export default {
 			.catch(err => {
 				console.error('post api request failed', err);
 				doneNotification('POST失敗しました', 'danger');
-				if (this.status === 401) {
-					// retry = false;
+				if (this.status === 401 && postRetry) {
 					revokeToken();
+					postRetry = false;
+					this.post(path);
 				}
 			});
 	},
